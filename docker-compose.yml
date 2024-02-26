@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: dockerfile.web
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+
+  app:
+    build:
+      context: .
+      dockerfile: dockerfile.app
+    ports:
+      - "3001:3001"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

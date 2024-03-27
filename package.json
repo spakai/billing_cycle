@@ -1,18 +1,19 @@
 {
     "name": "web-microservice",
+    "type": "module",
     "version": "1.0.0",
     "description": "Microservice for calculating bill cycle range",
     "main": "index.js",
     "scripts": {
-      "web": "node web.js",
-      "app": "node app.js"
-
+        "web": "node web.js",
+        "app": "node app.js"
     },
     "dependencies": {
-      "body-parser": "^1.19.1",
-      "express": "^4.17.2",
-      "axios": "^0.21.1"
-    }
-  }
-
- 
+        "axios": "^1.6.7",
+        "body-parser": "^1.19.1",
+        "express": "^4.17.2",
+        "prom-client": "^12.0.0",
+        "winston": "^3.3.3",
+        "winston-loki": "6.0.0-rc.9"
+      }
+}

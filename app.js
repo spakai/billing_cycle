@@ -1,25 +1,8 @@
 const express = require('express');
-const { createLogger, transports } = require("winston");
-const LokiTransport = require("winston-loki");
 const bodyParser = require('body-parser');
 const app = express();
 const port = 3001;
 app.use(bodyParser.urlencoded({ extended: true }));
-
-// Logger
-const logger = createLogger({
-  transports: [
-    new LokiTransport({
-      host: "http://loki:3100", 
-      // Only for development purposes
-      interval: 5,
-      labels: {
-        job: 'nodejs'
-      }
-    })
-  ]
-})
-
 
 app.post('/calculate', (req, res) => {
   const cycleDay = parseInt(req.body.billCycleDate);
@@ -35,7 +18,7 @@ app.listen(port, () => {
 
 function calculateBillCycleRange(cycleDay, currentDate) {
   // Log important info
-  logger.info(`Calculating bill cycle range for cycle day ${cycleDay} and current date ${currentDate}`);
+  console.log(`Calculating bill cycle range for cycle day ${cycleDay} and current date ${currentDate}`);
 
   const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth() + 1;
@@ -44,7 +27,7 @@ function calculateBillCycleRange(cycleDay, currentDate) {
   let startYear, startMonth, startDay, endYear, endMonth, endDay;
 
   if (currentDay >= cycleDay) {
-    logger.info(`currentDay >= cycleDay`);
+    console.log(`currentDay >= cycleDay`);
 
     startYear = currentYear;
     startMonth = currentMonth;
@@ -53,7 +36,7 @@ function calculateBillCycleRange(cycleDay, currentDate) {
     endMonth = currentMonth === 12 ? 1 : currentMonth + 1;
     endDay = cycleDay === 1 ? 1 : cycleDay - 1;
   } else {
-    logger.info(`currentDay < cycleDay`);
+    console.log(`currentDay < cycleDay`);
     startYear = currentMonth === 1 ? currentYear - 1 : currentYear;
     startMonth = currentMonth === 1 ? 12 : currentMonth - 1;
     startDay = cycleDay;
@@ -64,7 +47,7 @@ function calculateBillCycleRange(cycleDay, currentDate) {
 
   const startDate = new Date(startYear, startMonth - 1, startDay);
   const endDate = new Date(endYear, endMonth - 1, endDay, 23, 59, 59);
-  logger.info(`startDate: ${startDate}, endDate: ${endDate}`);
+  console.log(`startDate: ${startDate}, endDate: ${endDate}`);
   
   return {
     startDate,

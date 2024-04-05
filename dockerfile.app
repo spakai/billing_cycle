@@ -4,6 +4,7 @@ WORKDIR /home/node/app
 COPY package*.json ./
 USER node
 RUN npm install
+RUN npm install cors
 COPY --chown=node:node . .
 EXPOSE 3001
 CMD [ "node", "app.js" ]

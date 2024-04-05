@@ -2,6 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
 const port = 3001;
+const cors = require('cors');
+app.use(cors({ origin: 'http://localhost:3002' })); // Allow requests from http://localhost:3002
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post('/calculate', (req, res) => {

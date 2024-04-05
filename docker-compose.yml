@@ -7,6 +7,8 @@ services:
       dockerfile: dockerfile.web
     ports:
       - "3002:3002"
+    networks:
+      - my_network
 
   app:
     build:
@@ -14,3 +16,9 @@ services:
       dockerfile: dockerfile.app
     ports:
       - "3001:3001"
+    networks:
+      - my_network
+
+networks:
+  my_network:
+    driver: bridge

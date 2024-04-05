@@ -30,7 +30,7 @@ docker compose -f "billing_cycle/docker-compose.yml" up -d --build
 
 | Tag  | Notes                                                        | Services                 |
 | ---- | ------------------------------------------------------------ | ------------------------ |
-| 1    | Two nodejs based microservices web and app with logging to stdout. To showcase the business logic | App,Web                  |
+| **1**  | Two nodejs based microservices web and app with logging to stdout. To showcase the business logic | App,Web                  |
 | 2    | Extends  logging to  Loki                                    | + Promtail and Loki      |
 | 3    | Better logging ?                                             | -Promtail, Winston, Loki |
 | 4    | Extend metrics to   Prometheus                               | + Prometheus             |

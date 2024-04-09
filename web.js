@@ -1,9 +1,12 @@
 const express = require('express');
+const compression = require('compression');
 const bodyParser = require('body-parser');
 
 const app = express();
 
 const port = 3002;
+app.disable('x-powered-by');
+app.use(compression());
 
 app.use(bodyParser.urlencoded({ extended: true }));
 // Rest of your server-side code...

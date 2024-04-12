@@ -1,15 +1,31 @@
 const express = require('express');
-const compression = require('compression');
+const { createLogger, transports } = require("winston");
+const LokiTransport = require("winston-loki");
+
+
 const bodyParser = require('body-parser');
 
 const app = express();
 
 const port = 3002;
-app.disable('x-powered-by');
-app.use(compression());
+
 
 app.use(bodyParser.urlencoded({ extended: true }));
 // Rest of your server-side code...
+
+// Logger
+const logger = createLogger({
+  transports: [
+    new LokiTransport({
+      host: "http://loki:3100",
+      // Only for development purposes
+      interval: 5,
+      labels: {
+        job: 'nodejs'
+      }
+    })
+  ]
+})
 
 app.get('/', (req, res) => {
   res.send(`

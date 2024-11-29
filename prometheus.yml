@@ -1,0 +1,7 @@
+global:
+  scrape_interval: 15s  # Default scrape interval for metrics
+
+scrape_configs:
+  - job_name: 'app'
+    static_configs:
+      - targets: ['app:3001']  # Scrape metrics from your app service

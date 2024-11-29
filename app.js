@@ -1,8 +1,8 @@
 const express = require('express');
-
 const bodyParser = require('body-parser');
 const { createLogger, transports } = require("winston");
 const LokiTransport = require("winston-loki");
+const promClient = require('prom-client'); // Prometheus client
 
 const app = express();
 const port = 3001;
@@ -10,7 +10,6 @@ const port = 3001;
 const cors = require('cors');
 app.use(cors({ origin: 'http://localhost:3002' })); // Allow requests from http://localhost:3002
 app.use(bodyParser.urlencoded({ extended: true }));
-
 
 // Logger
 const logger = createLogger({
@@ -24,11 +23,32 @@ const logger = createLogger({
       }
     })
   ]
-})
+});
 
+// Prometheus metrics setup
+const register = new promClient.Registry(); // Registry to hold metrics
+promClient.collectDefaultMetrics({ register }); // Collect default metrics
+
+// Custom Prometheus metric: Counter for cycleDay values
+const cycleDayCounter = new promClient.Counter({
+  name: 'billing_cycle_day_count',
+  help: 'Total number of cycleDay values received',
+});
+register.registerMetric(cycleDayCounter);
+
+// Expose /metrics endpoint for Prometheus
+app.get('/metrics', async (req, res) => {
+  res.set('Content-Type', register.contentType);
+  res.send(await register.metrics());
+});
+
+// POST /calculate route
 app.post('/calculate', (req, res) => {
-  const cycleDay = parseInt(req.body.billCycleDate);
+  const cycleDay = parseInt(req.body.billCycleDate, 10);
   const currentDate = new Date(req.body.currentDate);
+
+  // Increment the Prometheus counter
+  cycleDayCounter.inc();
 
   const result = calculateBillCycleRange(cycleDay, currentDate);
   res.json(result);

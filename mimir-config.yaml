@@ -1,0 +1,21 @@
+server:
+  http_listen_port: 8080  # Port for HTTP queries and writes
+
+distributor:
+  ring:
+    kvstore:
+      store: inmemory  # In-memory key-value store for ring
+
+ingester:
+  ring:
+    kvstore:
+      store: inmemory  # In-memory key-value store for ingester
+
+compactor:
+  data_dir: /mimir/data  # Directory for storing compacted data
+
+limits:
+  # Adjust these settings according to the version of Mimir you are using
+  # Removed 'max_query_length' because it may no longer be supported
+memberlist:
+  join_members: [mimir-1, mimir-2]

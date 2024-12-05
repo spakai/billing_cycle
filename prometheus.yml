@@ -11,4 +11,4 @@ remote_write:
     # Add X-Scope-OrgID header so that Mimir knows what tenant the remote write data should be stored in.
     # In this case, our tenant is "demo"
     headers:
-      X-Scope-OrgID: spakai
+      X-Scope-OrgID: 1

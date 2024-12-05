@@ -6,7 +6,6 @@ services:
     ports:
       - "3002:3002"
 
-
   app:
     build:
       context: .
@@ -14,19 +13,16 @@ services:
     ports:
       - "3001:3001"
 
-
-
-
-  prometheus-agent:
-    image: prom/prometheus:latest
-    container_name: prometheus-agent
+ # Loki
+  loki:
+    image: grafana/loki:2.0.0
+    container_name: loki
+    ports:
+      - "3100:3100"
     command:
-      - --config.file=/etc/prometheus/prometheus-agent.yml
+      - --config.file=/mnt/config/loki-config.yaml
     volumes:
-      - ./prometheus-agent.yml:/etc/prometheus/prometheus-agent.yml:ro
-    depends_on:
-      - "mimir-1"
-      - "mimir-2"
+      - ./loki-config.yaml:/mnt/config/loki-config.yaml:ro
 
 
   # Grafana
@@ -39,8 +35,7 @@ services:
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
     volumes:
-      - ./grafana/provisioning-datasources.yml:/etc/grafana/provisioning/datasources/provisioning-datasources.yml     
-
+      - ./grafana/provisioning-datasources.yml:/etc/grafana/provisioning/datasources/provisioning-datasources.yml
 
   load-balancer:
     image: nginx:latest
@@ -54,19 +49,21 @@ services:
 
   mimir-1:
     image: grafana/mimir:latest
-    hostname : mimir-1
+    hostname: mimir-1
+    command:
       - -config.file=/etc/mimir/mimir-config.yaml
     volumes:
       - ./mimir-config.yaml:/etc/mimir/mimir-config.yaml:ro
 
   mimir-2:
     image: grafana/mimir:latest
-    hostname : mimir-2
+    hostname: mimir-2
     command:
       - -config.file=/etc/mimir/mimir-config.yaml
     volumes:
       - ./mimir-config.yaml:/etc/mimir/mimir-config.yaml:ro
-# Prometheus
+
+  # Prometheus
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
